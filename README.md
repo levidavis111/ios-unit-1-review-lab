@@ -38,6 +38,27 @@ establishment of an absolute Tyranny over these States. To prove this, let Facts
 candid world.
 """
 ```
+```swift
+var cleanDec = declarationOfIndependence.components(separatedBy: CharacterSet.punctuationCharacters).joined()
+//print(cleanDec)
+var cleanArray = cleanDec.components(separatedBy: " ")
+//print(cleanArray)
+var blankDictionary = [String:Int]()
+var longWords = cleanArray.filter { $0.count > 5 }
+//print(longWords)
+
+for i in longWords {
+//    var stringI = String(i)
+blankDictionary[i] = (blankDictionary[i] ?? 0) + 1
+}
+
+let sortedValues = blankDictionary.values.sorted(by: >)
+for (k,v) in blankDictionary {
+if v == sortedValues[0] {
+print(k)
+}
+}
+```
 
 ## Question 2
 
@@ -48,12 +69,42 @@ Make an array that contains all elements that appear more than twice in someRepe
 var someRepeatsAgain = [25,11,30,31,50,28,4,37,13,20,24,38,28,14,44,33,7,43,39,35,36,42,1,40,7,14,23,46,21,39,11,42,12,38,41,48,20,23,29,24,50,41,38,23,11,30,50,13,13,16,10,8,3,43,10,20,28,39,24,36,21,13,40,25,37,39,31,4,46,20,38,2,7,11,11,41,45,9,49,31,38,23,41,16,49,29,14,6,6,11,5,39,13,17,43,1,1,15,25]
 ```
 
+```swift
+var someRepeatsAgain = [25,11,30,31,50,28,4,37,13,20,24,38,28,14,44,33,7,43,39,35,36,42,1,40,7,14,23,46,21,39,11,42,12,38,41,48,20,23,29,24,50,41,38,23,11,30,50,13,13,16,10,8,3,43,10,20,28,39,24,36,21,13,40,25,37,39,31,4,46,20,38,2,7,11,11,41,45,9,49,31,38,23,41,16,49,29,14,6,6,11,5,39,13,17,43,1,1,15,25]
+
+var mappedInts = someRepeatsAgain.map { ($0,1) }
+
+var moreThanTwice = [Int]()
+
+let counts = Dictionary(mappedInts, uniquingKeysWith: +)
+//print(counts)
+for (k,v) in counts {
+if v >= 2 {
+moreThanTwice.append(k)
+}
+}
+print(moreThanTwice)
+```
+
 ## Question 3
 
 Identify if there are 3 integers in the following array that sum to 10. If so, print them. If there are multiple triplets, print all possible triplets.
 
 ```swift
 var tripleSumArr = [-20,-14, -8,-5,-3,-2,1,2,3,4,9,15,20,30]
+```
+```swift
+var tripleSumArr = [-20,-14, -8,-5,-3,-2,1,2,3,4,9,15,20,30]
+
+for i in tripleSumArr {
+for j in tripleSumArr {
+for m in tripleSumArr {
+if i + j + m == 10 {
+print((i,j,m))
+}
+}
+}
+}
 ```
 
 
@@ -97,6 +148,40 @@ var codeString = "aldfjaekwjnfaekjnf"
 b. Sort the string below in ascending order according the dictionary letterValues
 var codeStringTwo = "znwemnrfewpiqn"
 
+```swift
+//a. Sort the string below in descending order according the dictionary letterValues
+var codeString = "aldfjaekwjnfaekjnf"
+var codeStringArray = Array(codeString)
+//print(codeStringArray)
+var codeDictionary = [String:Int]()
+var emptyArray = [String:Int]()
+
+for (v) in codeStringArray {
+emptyArray[String(v)] = letterValues[String(v)]
+}
+
+//print(emptyArray)
+print(emptyArray.sorted(by: { $0.value > $1.value }))
+//let dictKeyInc = dict.sorted(by: <)
+
+
+//b. Sort the string below in ascending order according the dictionary letterValues
+var codeStringTwo = "znwemnrfewpiqn"
+
+
+var codeStringArray = Array(codeStringTwo)
+//print(codeStringArray)
+var codeDictionary = [String:Int]()
+var emptyArray = [String:Int]()
+
+for (v) in codeStringArray {
+emptyArray[String(v)] = letterValues[String(v)]
+}
+
+//print(emptyArray)
+print(emptyArray.sorted(by: { $0.value < $1.value }))
+```
+
 
 ## Question 4
 
@@ -107,6 +192,18 @@ Given an Array of Arrays of Ints, write a function that returns the Array of Int
 Input: [[2,4,1],[3,0],[9,3]]
 
 Output: [9,3]
+```
+```swift
+var input = [[2,4,1],[3,0],[9,3]]
+
+func sumArrays(arr: [[Int]]) -> [Int] {
+
+let newArr = arr.sorted { (a, b) -> Bool in
+return a.reduce(0, +) > b.reduce(0, +)
+}
+return newArr[0]
+}
+print(sumArrays(arr: input))
 ```
 
 ## Question 5
@@ -124,8 +221,40 @@ struct ReceiptItem {
 ```
 
 a. Given the structs above, add a method to `Receipt` that returns the total cost of all items
+```swift
+struct Receipt {
+let storeName: String
+let items: [ReceiptItem]
+
+func totalCost() -> Double {
+var sum: Double = 0
+for i in items {
+sum += i.price
+}
+return(sum)
+}
+}
+
+struct ReceiptItem {
+let name: String
+let price: Double
+}
+var myReceiptItem = ReceiptItem(name: "apple", price: 1.0)
+var secondReceiptItem = ReceiptItem(name: "soda", price: 0.5)
+var myReceiptItemArray = [myReceiptItem,secondReceiptItem]
+var myReceipt = Receipt(storeName: "Store", items: myReceiptItemArray)
+print(myReceipt.totalCost())
+```
 
 b. Write a function that takes in an array of `Receipts` and returns an array of `Receipts` that match a given store name
+```swift
+func storeNameFilter(arr: [Receipt], storeName: String) -> [Receipt] {
+let answerArray = arr.filter { (arr) -> Bool in
+return arr.storeName == storeName
+}
+return answerArray
+}
+```
 
 c. Write a function that takes in an array of `Receipts` and returns an array of those receipts sorted by price
 
@@ -153,6 +282,28 @@ fred.weight = 999.2
 fred.homePlanet = "Mars"
 ```
 
+let vs. var
+
+```swift
+class Giant {
+var name: String
+var weight: Double
+var homePlanet: String
+
+init(name: String, weight: Double, homePlanet: String) {
+self.name = name
+self.weight = weight
+self.homePlanet = homePlanet
+}
+}
+
+let fred = Giant(name: "Fred", weight: 340.0, homePlanet: "Earth")
+
+fred.name = "Brick"
+fred.weight = 999.2
+fred.homePlanet = "Mars"
+```
+
 b. Using the Giant class. What will the value of `edgar.name` be after the code below runs? How about `jason.name`? Explain why.
 
 ```swift
@@ -160,6 +311,8 @@ let edgar = Giant(name: "Edgar", weight: 520.0, homePlanet: "Earth")
 let jason = edgar
 jason.name = "Jason"
 ```
+
+Edgar, Edgar, Jason, Jason. Classes are referrence types. Changing an instance changes the reference.
 
 ## Question 7
 
@@ -179,6 +332,21 @@ struct BankAccount {
 ```
 
 a. Explain why the code above doesn't compile, then fix it.
+Needs to be mutating.
+```swift
+struct BankAccount {
+var owner: String
+var balance: Double
+
+mutating func deposit(_ amount: Double) {
+balance += amount
+}
+
+mutating func withdraw(_ amount: Double) {
+balance -= amount
+}
+}
+```
 
 b. Add a property called `deposits` of type `[Double]` that stores all of the deposits made to the bank account
 
@@ -187,6 +355,39 @@ c. Add a property called `withdraws` of type `[Double]` that stores all of the w
 d. Add a property called `startingBalance`.  Have this property be set to the original balance, and don't allow anyone to change it
 
 e. Add a method called `totalGrowth` that returns a double representing the change in the balance from the starting balance to the current balance
+
+```swift
+struct BankAccount {
+var owner: String
+let startingBalance: Double
+var deposits: Double
+var withdrawls: Double
+var balance: Double
+
+
+func totalGrowth() -> Double {
+return balance - startingBalance
+}
+
+mutating func deposit(_ amount: Double) {
+balance += amount
+deposits += amount
+}
+
+mutating func withdraw(_ amount: Double) {
+balance -= amount
+deposits -= amount
+}
+}
+
+
+var myAccount = BankAccount(owner: "Levi", startingBalance: 100, deposits: 0.0, withdrawls: 0.0, balance: 100)
+print(myAccount.totalGrowth())
+myAccount.deposit(100)
+myAccount.withdraw(50)
+print(myAccount.balance)
+print(myAccount.totalGrowth())
+```
 
 ## Question 8
 
@@ -207,9 +408,39 @@ House Targaryen - Fire and Blood
 
 House Lannister - A Lannister always pays his debts
 ```
+```swift
+enum GameOfThronesHouse: String {
+case stark = "Winter is coming"
+case lannister = "A Lannister always pays his debts"
+case targaryen = "Fire and Blood"
+case baratheon = "Ours is the Fury"
+}
+
+let house = GameOfThronesHouse.lannister
+
+switch house {
+default:
+print(house.rawValue)
+}
+```
 
 b. Move that function to inside the enum as a method
+```swift
+enum GameOfThronesHouse: String {
+case stark = "Winter is coming"
+case lannister = "A Lannister always pays his debts"
+case targaryen = "Fire and Blood"
+case baratheon = "Ours is the Fury"
 
+func printHouse() {
+
+switch self {
+default:
+print(self.rawValue)
+}
+}
+}
+```
 ## Question 9
 
 What are the contents of `library1` and `library2`? Explain why.
